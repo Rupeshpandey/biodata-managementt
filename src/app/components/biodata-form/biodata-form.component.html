@@ -1,0 +1,131 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <header class="header-primary mb-4">
+    <h1 class="text-center">Bio Data Management System</h1>
+  </header>
+
+  <h2>Create Bio Data</h2>
+  <form [formGroup]="biodataForm" (ngSubmit)="onSubmit()">
+    <!-- Personal Details Section -->
+    <!-- Name Field -->
+<mat-form-field appearance="fill" class="mb-3">
+  <mat-label>Name</mat-label>
+  <input matInput formControlName="name" required pattern="[a-zA-Z ]+">
+  <mat-error *ngIf="biodataForm.get('name')?.hasError('required')">
+    Name is required.
+  </mat-error>
+  <mat-error *ngIf="biodataForm.get('name')?.hasError('pattern')">
+    Name must contain only letters and spaces.
+  </mat-error>
+</mat-form-field>
+
+<!-- Father's Name Field -->
+<mat-form-field appearance="fill" class="mb-3">
+  <mat-label>Father's Name</mat-label>
+  <input matInput formControlName="fatherName" required pattern="[a-zA-Z ]+">
+  <mat-error *ngIf="biodataForm.get('fatherName')?.hasError('required')">
+    Father's Name is required.
+  </mat-error>
+  <mat-error *ngIf="biodataForm.get('fatherName')?.hasError('pattern')">
+    Father's Name must contain only letters and spaces.
+  </mat-error>
+</mat-form-field>
+
+
+    <div class="mb-3">
+      <label for="dob" class="form-label">Date of Birth</label>
+      <input type="date" id="dob" formControlName="dob" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="nationality" class="form-label">Nationality</label>
+      <select id="nationality" formControlName="nationality" class="form-control" required>
+        <option value="" disabled>Select Nationality</option>
+        <option value="Indian">Indian</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="address" class="form-label">Address</label>
+      <textarea id="address" formControlName="address" class="form-control" required></textarea>
+    </div>
+
+    <!-- Qualifications Section -->
+    <h4>Qualifications</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Course Name</th>
+          <th>University</th>
+          <th>Passing Year</th>
+          <th>Percentage</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody formArrayName="qualifications">
+        <tr *ngFor="let qualification of qualifications.controls; let i=index" [formGroupName]="i">
+          <td><input type="text" formControlName="courseName" class="form-control" required></td>
+          <td><input type="text" formControlName="university" class="form-control" required></td>
+          <td><input type="number" formControlName="passingYear" class="form-control" required min="1900" max="{{ currentYear }}"></td>
+          <td><input type="number" formControlName="percentage" class="form-control" required min="0" max="100"></td>
+          <td>
+            <!-- <button type="button" *ngIf="i === 0" (click)="addQualification(i)" class="btn btn-primary">
+              Add
+            </button> -->
+            <button type="button" 
+        *ngIf="i === 0" 
+        (click)="addQualification(i)" 
+        class="btn btn-primary" 
+        [disabled]="!isRowValid(qualification)">
+  Add
+</button>
+
+            <button type="button" *ngIf="i > 0" (click)="removeQualification(i)" class="btn btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Documents Section -->
+    <h4>Documents</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Upload</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody formArrayName="documents">
+        <tr *ngFor="let document of documents.controls; let i=index" [formGroupName]="i">
+          <td>
+            <select formControlName="type" class="form-control" required>
+              <option value="" disabled>Select Document Type</option>
+              <option value="Aadhar">Aadhar</option>
+              <option value="PAN">PAN</option>
+              <option value="Passport">Passport</option>
+            </select>
+          </td>
+          <td><input type="file" (change)="onFileSelected($event, i)" class="form-control" required></td>
+          <td>
+            <!-- <button type="button" *ngIf="i === 0" (click)="addDocument(i)" class="btn btn-primary">
+              Add
+            </button> -->
+            <button type="button" 
+        *ngIf="i === 0" 
+        (click)="addDocument(i)" 
+        class="btn btn-primary" 
+        [disabled]="!isDocumentRowValid(document)">
+  Add
+</button>
+
+            <button type="button" *ngIf="i > 0" (click)="removeDocument(i)" class="btn btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
